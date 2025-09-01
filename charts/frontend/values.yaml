@@ -1,0 +1,28 @@
+replicaCount: 2
+
+image:
+  repository: hannanahmeddevops/frontend
+  tag: v1
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 3000
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: frontend.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []   # Later you can add cert-manager
+
+env:
+  NEXT_PUBLIC_API_URL: "http://backend.local/api"
+  APP_NAME: "NextJS Frontend on Minikube"
+
+secrets:
+  DB_PASSWORD: "password123"   # base64 encoded later

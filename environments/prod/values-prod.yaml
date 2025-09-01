@@ -1,0 +1,35 @@
+replicaCount: 3
+
+image:
+  repository: myregistry.com/frontend
+  tag: "1.0.0"
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: frontend.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: frontend-tls
+      hosts:
+        - frontend.example.com
+
+resources:
+  requests:
+    cpu: "300m"
+    memory: "512Mi"
+  limits:
+    cpu: "600m"
+    memory: "1Gi"
+
+env:
+  - name: API_URL
+    value: "http://backend.prod.svc.cluster.local:5000"
